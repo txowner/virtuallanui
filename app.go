@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/lucheng0127/virtuallan/pkg/cli"
 )
 
 // App struct
@@ -33,7 +34,15 @@ type SubmitParams struct {
 
 // Submit returns a greeting for the given info
 func (a *App) Submit(sp SubmitParams) string {
-	return fmt.Sprintf(`
-		collect info: target: %s username: %s password: %s key: %s logLevel: %s
-		`, sp.Target, sp.Username, sp.Password, sp.Key, sp.LogLevel)
+	if err := cli.RunClient(
+		cli.SetClientTarget(sp.Target),
+		cli.SetClientUser(sp.Username),
+		cli.SetClientPasswd(sp.Password),
+		cli.SetClientKey(sp.Key),
+		cli.SetClientLogLevel(sp.LogLevel),
+	); err != nil {
+		panic(err)
+	}
+
+	return "ok"
 }
